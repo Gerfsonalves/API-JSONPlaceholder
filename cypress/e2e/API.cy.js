@@ -4,7 +4,7 @@ import { faker } from '@faker-js/faker';
 
 
 describe('API restful-booker', () => {
-  it('Get all posts', () => {
+  it('GetBookingIds', () => {
     cy.request({
       method: 'GET',
       url: 'https://restful-booker.herokuapp.com/booking',
