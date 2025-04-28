@@ -1,4 +1,4 @@
-import { faker } from '@faker-js/faker';
+
 
 /// <reference types="cypress" />
 
@@ -42,7 +42,7 @@ describe('API restful-booker - Fluxo Completo', () => {
   it('GetBooking', () => {
     cy.request({
       method: 'GET',
-      url: 'https://restful-booker.herokuapp.com/booking/3',
+      url: 'https://restful-booker.herokuapp.com/booking/1',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -85,6 +85,7 @@ describe('API restful-booker - Fluxo Completo', () => {
       url: 'https://restful-booker.herokuapp.com/booking/2',
       headers: {
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
         'Cookie': `token=${authToken}`
       },
       body: {
@@ -97,6 +98,25 @@ describe('API restful-booker - Fluxo Completo', () => {
           "checkout": "2025-04-28"
         },
         "additionalneeds": "Nova história"
+      }
+    }).then((response) => {
+      console.log('Response Body:', response.body)
+      expect(response.status).to.eq(200);
+    });
+  });
+
+  it('PartialUpdateBooking', () => {
+    cy.request({
+      method: 'PATCH',
+      url: 'https://restful-booker.herokuapp.com/booking/2',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Cookie': `token=${authToken}`
+      },
+      body: {
+        "firstname": "João",
+        "lastname": "Kleber"
       }
     }).then((response) => {
       console.log('Response Body:', response.body)
