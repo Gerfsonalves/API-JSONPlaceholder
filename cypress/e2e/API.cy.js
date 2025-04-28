@@ -3,9 +3,11 @@ import { faker } from '@faker-js/faker';
 /// <reference types="cypress" />
 
 
-describe('API restful-booker', () => {
+describe('API restful-booker - Fluxo Completo', () => {
+  let authToken;
 
-  it('Auth - CreateToken', () => {
+  // Obter token antes de todos os testes
+  before(() => {
     cy.request({
       method: 'POST',
       url: 'https://restful-booker.herokuapp.com/auth',
@@ -13,16 +15,12 @@ describe('API restful-booker', () => {
         'Content-Type': 'application/json'
       },
       body: {
-        "username": "admin",
-        "password": "password123"
+        username: 'admin',
+        password: 'password123'
       }
     }).then((response) => {
       expect(response.status).to.eq(200);
-      expect(response.body).to.have.property('token');
-      expect(response.body.token).to.be.a('string');
-      expect(response.body.token).not.to.be.empty;
-
-      cy.wrap(response.body.token).as('authToken');
+      authToken = response.body.token;
     });
   });
 
@@ -32,7 +30,9 @@ describe('API restful-booker', () => {
     cy.request({
       method: 'GET',
       url: 'https://restful-booker.herokuapp.com/booking',
-
+      headers: {
+        'Content-Type': 'application/json'
+      },
     })
       .then((response) => {
         expect(response.status).to.eq(200);
@@ -43,7 +43,9 @@ describe('API restful-booker', () => {
     cy.request({
       method: 'GET',
       url: 'https://restful-booker.herokuapp.com/booking/3',
-
+      headers: {
+        'Content-Type': 'application/json'
+      },
     })
       .then((response) => {
         expect(response.status).to.eq(200);
@@ -56,6 +58,9 @@ describe('API restful-booker', () => {
     cy.request({
       method: 'POST',
       url: 'https://restful-booker.herokuapp.com/booking',
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body: {
         "firstname": "Ge",
         "lastname": "Alves",
@@ -72,6 +77,31 @@ describe('API restful-booker', () => {
         expect(response.status).to.eq(200);
         expect(response.body).to.be.an('object');
       });
+  });
+
+  it('UpdateBooking', () => {
+    cy.request({
+      method: 'PUT',
+      url: 'https://restful-booker.herokuapp.com/booking/2',
+      headers: {
+        'Content-Type': 'application/json',
+        'Cookie': `token=${authToken}`
+      },
+      body: {
+        "firstname": "James",
+        "lastname": "Brown",
+        "totalprice": 111,
+        "depositpaid": true,
+        "bookingdates": {
+          "checkin": "2018-01-01",
+          "checkout": "2025-04-28"
+        },
+        "additionalneeds": "Nova história"
+      }
+    }).then((response) => {
+      console.log('Response Body:', response.body)
+      expect(response.status).to.eq(200);
+    });
   });
 
 })
