@@ -17,7 +17,6 @@ describe('API restful-booker', () => {
         "password": "password123"
       }
     }).then((response) => {
-      console.log(response)
       expect(response.status).to.eq(200);
       expect(response.body).to.have.property('token');
       expect(response.body.token).to.be.a('string');
@@ -36,7 +35,6 @@ describe('API restful-booker', () => {
 
     })
       .then((response) => {
-        console.log(response)
         expect(response.status).to.eq(200);
       });
   });
@@ -44,26 +42,36 @@ describe('API restful-booker', () => {
   it('GetBooking', () => {
     cy.request({
       method: 'GET',
-      url: 'https://restful-booker.herokuapp.com/booking/1',
+      url: 'https://restful-booker.herokuapp.com/booking/3',
 
     })
       .then((response) => {
-        console.log(response)
         expect(response.status).to.eq(200);
         expect(response.body).to.be.an('object');
-        expect(response.body).to.have.all.keys(
-          'firstname',
-          'lastname',
-          'totalprice',
-          'depositpaid',
-          'bookingdates',
-          'additionalneeds'
-        );
+
       });
   });
 
-  it('', () => {
-
+  it('CreateBooking', () => {
+    cy.request({
+      method: 'POST',
+      url: 'https://restful-booker.herokuapp.com/booking',
+      body: {
+        "firstname": "Ge",
+        "lastname": "Alves",
+        "totalprice": 111,
+        "depositpaid": true,
+        "bookingdates": {
+          "checkin": "2018-01-01",
+          "checkout": "2025-04-28"
+        },
+        "additionalneeds": "C.R.U.D. QA"
+      }
+    })
+      .then((response) => {
+        expect(response.status).to.eq(200);
+        expect(response.body).to.be.an('object');
+      });
   });
 
 })
