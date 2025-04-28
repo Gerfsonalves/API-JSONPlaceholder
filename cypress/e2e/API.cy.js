@@ -41,5 +41,29 @@ describe('API restful-booker', () => {
       });
   });
 
+  it('GetBooking', () => {
+    cy.request({
+      method: 'GET',
+      url: 'https://restful-booker.herokuapp.com/booking/1',
+
+    })
+      .then((response) => {
+        console.log(response)
+        expect(response.status).to.eq(200);
+        expect(response.body).to.be.an('object');
+        expect(response.body).to.have.all.keys(
+          'firstname',
+          'lastname',
+          'totalprice',
+          'depositpaid',
+          'bookingdates',
+          'additionalneeds'
+        );
+      });
+  });
+
+  it('', () => {
+
+  });
 
 })
